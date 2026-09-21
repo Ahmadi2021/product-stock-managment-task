@@ -36,13 +36,17 @@ class ReconcileInventory extends Command
             $expected[$key] = 0;
         }
 
-       
+        /*
+         * 3. Get all movements for this tenant.
+         */
         $movements = StockMovement::withoutGlobalScopes()
             ->where('tenant_id', $tenantId)
             ->orderBy('id')
             ->get();
 
-      
+        /*
+         * 4. Calculate expected stock.
+         */
         foreach ($movements as $movement) {
 
             if ($movement->type === 'in') {

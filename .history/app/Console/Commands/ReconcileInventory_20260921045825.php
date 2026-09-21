@@ -20,7 +20,7 @@ class ReconcileInventory extends Command
 
    
         if (!Tenant::find($tenantId)) {
-            $this->error("Tenant {$tenantId}  not found .");
+            $this->error("Tenant {$tenantId}  پیدا نشد.");
 
             return self::FAILURE;
         }
@@ -36,13 +36,17 @@ class ReconcileInventory extends Command
             $expected[$key] = 0;
         }
 
-       
+        /*
+         * 3. Get all movements for this tenant.
+         */
         $movements = StockMovement::withoutGlobalScopes()
             ->where('tenant_id', $tenantId)
             ->orderBy('id')
             ->get();
 
-      
+        /*
+         * 4. Calculate expected stock.
+         */
         foreach ($movements as $movement) {
 
             if ($movement->type === 'in') {
@@ -71,7 +75,7 @@ class ReconcileInventory extends Command
 
                 $meta = $movement->meta;
 
-               
+                // meta is stored as a JSON string
                 if (is_string($meta)) {
                     $meta = json_decode($meta, true);
                 }

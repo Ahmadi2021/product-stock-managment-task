@@ -42,7 +42,9 @@ class ReconcileInventory extends Command
             ->orderBy('id')
             ->get();
 
-      
+        /*
+         * 4. Calculate expected stock.
+         */
         foreach ($movements as $movement) {
 
             if ($movement->type === 'in') {
